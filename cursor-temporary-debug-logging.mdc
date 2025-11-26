@@ -8,9 +8,11 @@ This rule standardizes how we add temporary debug logging during failing tests a
 
 1) Always start with hardcoded, unconditional debug logs
 - Add logs immediately, without flags or guards. Do not gate behind environment variables or configuration.
-- Use a dedicated function (e.g. `CURSOR_DEBUG_LOG`) or a standard logging statement with a distinctive prefix (e.g. `console.log('[CURSOR_DEBUG]', ...)`).
-- **Finding the function**: If your project has a shared debug utility, search for it (e.g. `rg "CURSOR_DEBUG_LOG"`) and import from there. Otherwise, use a grep-friendly prefix directly.
-- Behavior: Prints a one-line entry to stderr/stdout with timestamp and caller location (where possible), making it easy to correlate with test runs.
+- Use **only** the `CURSOR_DEBUG_LOG` function. No other logging method is permitted.
+- **Finding the function**: Search for it with `rg "CURSOR_DEBUG_LOG"` to locate the utility in your project, then import and use it.
+  - **Python**: `from <module> import CURSOR_DEBUG_LOG` then `CURSOR_DEBUG_LOG("message", variable=value)`
+  - **JavaScript/TypeScript**: `import { CURSOR_DEBUG_LOG } from "<module>"` then `CURSOR_DEBUG_LOG("message", { variable })`
+- Behavior: Prints a one-line entry to stderr/stdout, making it easy to correlate with test runs.
 
 2) Investigation workflow
 - Step A: Add targeted debug calls around suspected code paths.
@@ -34,4 +36,4 @@ This rule standardizes how we add temporary debug logging during failing tests a
 
 5) Intent and scope
 - This logging exists solely for interactive debugging in Cursor chats.
-- The unique function name is intentionally grep-friendly to ensure quick cleanup on request.
+- The function name `CURSOR_DEBUG_LOG` is intentionally unique and grep-friendly to ensure quick cleanup on request.
