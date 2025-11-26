@@ -25,6 +25,6 @@ Code comments and docstrings must be **timeless** and describe the code as it cu
 - **Focus**: Comments should explain **why** tricky code exists or **how** it functions.
 - **Avoid**: "Here is the implementation of..." or "Standardized composer utilities". The code itself shows it is an implementation.
 - **Example**:
-  - BAD: `# NEW: Added this function to handle retries`
-  - BAD: `# Updated to support the new API`
-  - GOOD: `# Retries the request with exponential backoff to handle transient network errors.`
+  - BAD: `NEW: Added this function to handle retries`
+  - BAD: `Updated to support the new API`
+  - GOOD: `Retries the request with exponential backoff to handle transient network errors.`

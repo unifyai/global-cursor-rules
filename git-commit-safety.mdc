@@ -16,18 +16,18 @@ To eliminate this risk, **NEVER** run `git commit` without explicit file argumen
 
 ### Incorrect
 ```bash
-git add file1.py
-git commit -m "Update file1"
+git add myfile.json
+git commit -m "Update myfile"
 ```
 
 ### Correct
 ```bash
 # For modified files:
-git commit file1.py -m "Update file1"
+git commit myfile.json -m "Update myfile"
 
 # For new (untracked) files:
-git add file1.py
-git commit file1.py -m "Add file1"
+git add myfile.json
+git commit myfile.json -m "Add myfile"
 ```
 
 ### Reasoning

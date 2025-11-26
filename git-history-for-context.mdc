@@ -1,3 +1,9 @@
+---
+description: Using Git History to Understand Code Rationale and Evolution
+globs: ["**/*"]
+alwaysApply: false
+---
+
 # Git History for Context
 
 ## Context
