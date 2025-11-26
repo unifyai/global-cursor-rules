@@ -8,9 +8,9 @@ This rule standardizes how we add temporary debug logging during failing tests a
 
 1) Always start with hardcoded, unconditional debug logs
 - Add logs immediately, without flags or guards. Do not gate behind environment variables or configuration.
-- Use a dedicated function (e.g. `CURSOR_DEBUG_LOG`) or a standard print/logging statement with a distinctive prefix.
-- **Import**: Import this function from your project's common debug utilities.
-- Behavior: Prints a one-line entry to stderr/stdout with timestamp and caller location, making it easy to correlate with test runs.
+- Use the exact function `CURSOR_DEBUG_LOG`. This is the only permitted approach—do not use raw print statements or other logging methods.
+- **Finding the function**: Run `rg "def CURSOR_DEBUG_LOG"` to locate where this function is defined in the current project. Import it from that location.
+- Behavior: Prints a one-line entry to stderr with timestamp and caller location, making it easy to correlate with test runs.
 
 2) Investigation workflow
 - Step A: Add targeted debug calls around suspected code paths.
@@ -22,7 +22,7 @@ This rule standardizes how we add temporary debug logging during failing tests a
 3) Cleanup policy
 - After the fix is confirmed, remove all temporary logging.
 - Grep to find every occurrence:
-  - ripgrep: `rg -n "CURSOR_DEBUG_LOG" -S` (or your function name)
+  - ripgrep: `rg -n "CURSOR_DEBUG_LOG" -S`
   - grep:    `grep -Rin "CURSOR_DEBUG_LOG" .`
 - Delete each call site (and any now-unused imports) before finalizing the fix.
 
