@@ -10,7 +10,7 @@ This rule standardizes how we add temporary debug logging during failing tests a
 - Add logs immediately, without flags or guards. Do not gate behind environment variables or configuration.
 - Use **only** the `CURSOR_DEBUG_LOG` function. No other logging method is permitted.
 - **Finding the function**: Search for it with `rg "CURSOR_DEBUG_LOG"` to locate the utility in your project, then import and use it.
-  - **Python**: `from <module> import CURSOR_DEBUG_LOG` then `CURSOR_DEBUG_LOG("message", variable=value)`
+  - **Python**: `from <module> import CURSOR_DEBUG_LOG` then `CURSOR_DEBUG_LOG("message", variable)`
   - **JavaScript/TypeScript**: `import { CURSOR_DEBUG_LOG } from "<module>"` then `CURSOR_DEBUG_LOG("message", { variable })`
 - Behavior: Prints a one-line entry to stderr/stdout, making it easy to correlate with test runs.
 
