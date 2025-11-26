@@ -8,9 +8,9 @@ This rule standardizes how we add temporary debug logging during failing tests a
 
 1) Always start with hardcoded, unconditional debug logs
 - Add logs immediately, without flags or guards. Do not gate behind environment variables or configuration.
-- Use the exact function `CURSOR_DEBUG_LOG`. This is the only permitted approach—do not use raw print statements or other logging methods.
-- **Finding the function**: Run `rg "def CURSOR_DEBUG_LOG"` to locate where this function is defined in the current project. Import it from that location.
-- Behavior: Prints a one-line entry to stderr with timestamp and caller location, making it easy to correlate with test runs.
+- Use a dedicated function (e.g. `CURSOR_DEBUG_LOG`) or a standard logging statement with a distinctive prefix (e.g. `console.log('[CURSOR_DEBUG]', ...)`).
+- **Finding the function**: If your project has a shared debug utility, search for it (e.g. `rg "CURSOR_DEBUG_LOG"`) and import from there. Otherwise, use a grep-friendly prefix directly.
+- Behavior: Prints a one-line entry to stderr/stdout with timestamp and caller location (where possible), making it easy to correlate with test runs.
 
 2) Investigation workflow
 - Step A: Add targeted debug calls around suspected code paths.
@@ -28,7 +28,7 @@ This rule standardizes how we add temporary debug logging during failing tests a
 
 4) Alignment with workspace rules
 - No fast paths or heuristics: Logging should not add conditional shortcuts; it merely reports state unconditionally.
-- No try/except shields: Do not add defensive try/except around the logs. Keep failures visible.
+- No exception-handling shields: Do not add defensive exception handling (try/catch, try/except) around the logs. Keep failures visible.
 - No test details in production prompts: Temporary logs must not leak test-specific information into production prompts or docstrings.
 - Rapid evolution: This logging is temporary by design; remove it once the issue is resolved—do not preserve backward compatibility.
 
