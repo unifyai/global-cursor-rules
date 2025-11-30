@@ -22,3 +22,24 @@ This rule applies when you are trying to understand the *rationale* behind speci
 ### 3. Targeted Queries
 - **Be Surgical**: When querying git, look for the history of specific lines or changes (e.g., `git blame -L n,m filename` or `git log -p filename`) rather than dumping the entire history into the context.
 - **Synthesize**: Use the information to form a narrative about the code's lifecycle (e.g., "This was added in commit X to fix bug Y, but since we rewrote the bug Y subsystem, this is now dead code").
+
+### 4. Investigating Regressions with Git Diff
+
+When debugging test failures or regressions, git history can pinpoint exactly what changed.
+
+**When the user proactively provides context:**
+If the user says something like "the test was passing at commit `<hash>`, and the relevant changes are in `<path>`", use this optimally:
+- Run `git log --oneline <hash>..HEAD -- <path>` to see which commits touched the area
+- Run `git diff <hash>..HEAD -- <path>` to get the **aggregate diff** (not serial diffs commit-by-commit)
+- Cross-reference the diff with commit messages to understand developer intent
+- The overall diff is mathematically equivalent to composing serial diffs, but far more token-efficient and cognitively cleaner
+
+**When debugging hits a roadblock:**
+If direct code analysis and debug logging (`CURSOR_DEBUG_LOG`) aren't yielding answers, *then* ask the user:
+- "Do you know when this test was last passing? If you have a commit hash and know which files/folders are likely involved, that would help narrow down what changed."
+- Don't front-load this question—often the user doesn't know the answer. Try direct debugging first.
+
+**Avoid wasteful patterns:**
+- Don't ask the user to provide diffs—ask for the commit hash and run git commands yourself
+- Don't read diffs commit-by-commit and mentally compose them; use the aggregate diff
+- Don't dump entire file histories; scope queries to the relevant path(s)
