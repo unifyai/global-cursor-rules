@@ -32,3 +32,26 @@ git commit myfile.json -m "Add myfile"
 
 ### Reasoning
 Passing filenames to `git commit` bypasses the shared index for that specific commit operation, ensuring that Agent A only commits what it intends to, regardless of what Agent B has staged.
+
+## Rule: Never Push Commits
+
+**NEVER** run `git push` under any circumstances. This applies to all forms of pushing:
+
+- `git push`
+- `git push origin <branch>`
+- `git push --force` or `git push -f` (especially dangerous)
+- `git push --force-with-lease`
+- Any other push variant
+
+### Reasoning
+Pushing is an irreversible action that affects shared remote state. The user must always:
+1. Review commits locally before pushing
+2. Decide when and where to push
+3. Handle any authentication or CI/CD implications
+
+Force pushing is particularly dangerous as it rewrites remote history and can destroy other collaborators' work.
+
+### What To Do Instead
+- Commit changes locally (following the explicit path commits rule above)
+- Inform the user that changes are committed and ready for them to push
+- If the user asks you to push, politely decline and explain that pushing must be done manually
