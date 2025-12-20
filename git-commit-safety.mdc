@@ -1,6 +1,7 @@
 ---
 description: Rules for performing git commits safely in multi-agent environments to avoid race conditions
-globs: **/*
+globs: ["**/*"]
+alwaysApply: true
 ---
 
 # Git Commit Safety
