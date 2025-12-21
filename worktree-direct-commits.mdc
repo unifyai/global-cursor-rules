@@ -1,0 +1,59 @@
+---
+description: Direct commits to checked-out branch in worktree mode - no feature branches or PRs
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Worktree Mode: Direct Commits, No Feature Branches
+
+## Context
+When running in **worktree mode**, the mental model is fundamentally different from traditional feature development:
+
+- **Worktrees are for small-scale parallel fixes**, not large-scale feature development
+- **Multiple agents on the same branch** = multiple collaborators working in parallel, each with their own local working directory
+- The overhead of `feature branch → PR → merge → cleanup` is **overkill** for this workflow
+
+## Critical Rules
+
+### 1. NEVER Create Feature Branches
+When asked to make changes, commit, or push:
+- **DO NOT** create a new branch (e.g., `git checkout -b feature/...`)
+- **DO NOT** suggest creating a branch for the work
+- **COMMIT DIRECTLY** to whatever branch is currently checked out
+
+The worktree already provides isolation. Creating additional branches defeats the purpose.
+
+### 2. NEVER Create Pull Requests
+- **DO NOT** use `gh pr create` or suggest creating a PR
+- **DO NOT** push to a new remote branch with the intent of opening a PR
+- If the user wants changes merged, they will handle the merge strategy themselves
+
+### 3. The Correct Workflow
+```bash
+# 1. Make your changes to files
+
+# 2. Commit directly to the current branch (following git-commit-safety rules)
+git commit <specific-files> -m "Description of change"
+
+# 3. If user asks you to push, push to the CURRENT branch
+git push origin HEAD
+# or
+git push origin <current-branch-name>
+```
+
+### 4. Mental Model
+Think of worktree agents as **multiple developers pair-programming on the same branch**:
+- Each has their own local checkout (the worktree)
+- All commit to the same branch
+- No one creates personal feature branches for small fixes
+- Coordination happens through communication, not branch isolation
+
+## Why This Matters
+The alternative workflow creates significant noise:
+1. **Stale branches accumulate** - agents create branches, users forget to delete them
+2. **PR overhead** - reviewing, merging, and closing PRs for trivial fixes wastes time
+3. **Context switching** - users must mentally track multiple branches for what should be one stream of work
+4. **Merge conflicts** - more branches = more opportunities for conflicts
+
+## Exception
+If the user **explicitly asks** for a feature branch or PR workflow, follow their instructions. But **never default to this behavior** in worktree mode.
