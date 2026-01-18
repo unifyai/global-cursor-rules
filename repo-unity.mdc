@@ -1,0 +1,30 @@
+---
+description: Unity Repository Role - The Assistant's Brain
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Unity: The Assistant's Brain
+
+Unity is the cognitive core of the AI assistant platform. It implements the assistant's "thinking" through a distributed architecture of specialized **state managers** (`ContactManager`, `TaskScheduler`, `KnowledgeManager`, `TranscriptManager`, `GuidanceManager`, `FunctionManager`, etc.), each orchestrated by the central `Actor` through code-first plans.
+
+## Architecture
+
+The system uses **async tool loops** where LLMs orchestrate lower-level tools via English-language APIs, with support for nested steering (pause/resume/interject/stop). The `ConversationManager` handles live chat orchestration and wires up communication channels. Each manager has a `base.py` defining the public API contract, with implementations providing storage and I/O details.
+
+## Dependencies
+
+- **unify** (Python SDK): For backend storage, logging, and project management via Orchestra's REST API
+- **unillm**: For LLM inference with caching, provider normalization, and observability
+
+## Position in the System
+
+Unity is where all the intelligence lives—reasoning, memory, task execution, knowledge retrieval, and decision-making. It consumes data from Orchestra (via unify), makes LLM calls (via unillm), and triggers external actions through the Communication service. The Console provides observability into Unity's operations.
+
+## Related Repositories
+
+- **orchestra**: Backend API and database that Unity persists data to
+- **unify**: Python SDK that Unity uses to communicate with Orchestra
+- **unillm**: LLM client that Unity uses for all inference calls
+- **communication**: External gateway that Unity calls to send SMS/email/make calls
+- **console**: UI that displays Unity's logged data and manages assistants

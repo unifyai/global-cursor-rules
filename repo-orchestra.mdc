@@ -1,0 +1,35 @@
+---
+description: Orchestra Repository Role - The Backend API & Database Layer
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Orchestra: The Backend API & Database Layer
+
+Orchestra is the foundational API server and persistence layer that all other services depend on. It's a FastAPI application backed by PostgreSQL (with pgvector for embeddings) that provides the REST API at `api.unify.ai/v0`.
+
+## Responsibilities
+
+- User accounts, authentication, and API keys
+- Projects, contexts, and logging/metrics
+- Assistants (profiles, phone numbers, voice settings, desktop URLs)
+- Billing, credits, and Stripe webhook handling
+- Interfaces, tabs, and tiles (for Console UI state)
+- Object storage and signed URL generation
+- Observability infrastructure (Prometheus, Loki, Tempo, Grafana)
+
+## Architecture
+
+The codebase follows a clean layered structure: `web/api/` contains FastAPI routers, `db/dao/` contains data access objects, `db/models/` contains SQLAlchemy ORM models, and `db/migrations/` contains Alembic migrations. Services in `services/` handle external integrations (Deepgram, ElevenLabs, Cartesia for voice, etc.).
+
+## Position in the System
+
+Orchestra is the source of truth for all persistent data. When Unity's managers call `unify.log()` or store contacts/tasks/knowledge, those requests hit Orchestra's endpoints. The Console reads from and writes to Orchestra for all UI state. Communication service authenticates against Orchestra for admin operations.
+
+## Related Repositories
+
+- **unity**: The AI brain that persists its state to Orchestra
+- **unify**: Python SDK that wraps Orchestra's REST API
+- **console**: Web UI that reads/writes Orchestra data
+- **communication**: Authenticates with Orchestra for admin operations
+- **unillm**: Independent (no direct Orchestra dependency)

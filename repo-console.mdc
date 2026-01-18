@@ -1,0 +1,46 @@
+---
+description: Console Repository Role - The User Interface & Observability Dashboard
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Console: The User Interface & Observability Dashboard
+
+Console is a Next.js web application that serves as the primary user interface for the platform. Currently more internally-facing for observability, it may evolve into a customer-facing product for technical teams.
+
+## Core Features
+
+### Assistant Management
+- Hiring flow (pre-hire chat with potential assistants)
+- Profile management (photos, videos, voice selection)
+- Phone number and email assignment
+- Desktop/browser session configuration
+
+### Observability Dashboard
+- **Interfaces**: Top-level dashboard layouts
+- **Tabs**: Grouped views within interfaces
+- **Tiles**: Individual visualization components (tables, plots, metrics)
+- Sophisticated prefetching and dependency management for real-time data
+- Debug environment variables for development (`NEXT_PUBLIC_DEBUG_*`)
+
+### Platform Operations
+- Billing and credits management
+- API key management
+- Project and context management
+- User profile and organization settings
+
+## Architecture
+
+Next.js App Router with API routes that proxy to Orchestra. Uses React Query for data fetching, Tailwind for styling, and a tile-based architecture for composable dashboards. The `/api/` routes handle authentication and forward requests to Orchestra's REST API.
+
+## Position in the System
+
+Console is the human interface to the platform. Users manage assistants, view logged data, and monitor system health through Console. It reads from Orchestra for all data and can dispatch messages to assistants. For developers, it provides deep visibility into Unity's operations through the logging/visualization system.
+
+## Related Repositories
+
+- **orchestra**: Backend API that Console reads from and writes to
+- **unity**: The AI brain whose operations Console displays
+- **communication**: Console can trigger communications (calls, SMS, email)
+- **unify**: Console uses Orchestra directly (TypeScript), not the Python SDK
+- **unillm**: Console uses Orchestra's chat endpoints, not UniLLM directly

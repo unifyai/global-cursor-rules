@@ -1,0 +1,39 @@
+---
+description: Communication Repository Role - The External Communication Gateway
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Communication: The External Communication Gateway
+
+Communication is the service that connects the AI assistant to the outside world via phone, SMS, and email. It bridges Unity's internal reasoning with real-world communication channels.
+
+## Components
+
+### Adapters (Cloud Functions)
+Unauthenticated webhook handlers deployed as Google Cloud Functions:
+- `twilio_call_webhook`: Inbound voice calls (TwiML conference setup + Pub/Sub dispatch)
+- `twilio_msg_webhook`: Inbound SMS messages
+- Gmail watch renewal and Pub/Sub notification processing
+
+### Communication API (FastAPI)
+JSON endpoints protected by admin API key:
+- **Phone** (`/phone`): Call control, SMS sending, number provisioning, agent dispatch
+- **Gmail** (`/gmail`): Email sending, watch management
+- **Outlook** (`/outlook`): Email sending, subscription management
+- **Social** (`/social`): Verification code generation over SMS
+
+### SBC Proxy
+Kamailio-based SIP proxy for LiveKit integration, handling SIP trunking for voice calls.
+
+## Position in the System
+
+When Unity's `ConversationManager` needs to dispatch a voice agent, send an SMS, or trigger an email, it calls Communication at `UNITY_COMMS_URL`. Communication handles the Twilio/Gmail/Outlook integrations and publishes events back for Unity to process. The adapters receive external webhooks and route them into the system.
+
+## Related Repositories
+
+- **unity**: Primary caller—ConversationManager triggers outbound communications
+- **orchestra**: Authenticates admin operations, stores assistant phone numbers
+- **console**: Can trigger communications through Orchestra/Communication
+- **unify**: May be used for logging communication events
+- **unillm**: May be used for any LLM-powered communication features
