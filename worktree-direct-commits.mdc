@@ -35,10 +35,8 @@ The worktree already provides isolation. Creating additional branches defeats th
 # 2. Commit directly to the current branch (following git-commit-safety rules)
 git commit <specific-files> -m "Description of change"
 
-# 3. If user asks you to push, push to the CURRENT branch
+# 3. Only if the user explicitly asks you to push, push to the CURRENT branch
 git push origin HEAD
-# or
-git push origin <current-branch-name>
 ```
 
 ### 4. Mental Model

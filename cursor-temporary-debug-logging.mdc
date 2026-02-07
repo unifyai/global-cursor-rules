@@ -14,26 +14,32 @@ This rule standardizes how we add temporary debug logging during failing tests a
   - **JavaScript/TypeScript**: `import { CURSOR_DEBUG_LOG } from "<module>"` then `CURSOR_DEBUG_LOG("message", { variable })`
 - Behavior: Prints an entry to stderr/stdout, making it easy to correlate with test runs.
 
-2) Investigation workflow
+2) Python-specific import discipline
+- **Self-contained imports**: Each debug snippet must include ALL its own imports inline (e.g., `import json as _json; import os as _os;`). Never rely on the file's existing imports.
+- **Prefixed names**: Use underscore-prefixed aliases (`_json`, `_os`, `_pid`) to avoid shadowing.
+- **Region markers**: Wrap in `# #region agent log` / `# #endregion` for easy identification and removal.
+- This prevents `NameError` crashes when debug snippets reference modules that aren't imported at that location.
+
+3) Investigation workflow
 - Step A: Add targeted debug calls around suspected code paths.
 - Step B: Re-run the failing test(s) and inspect the new logs.
 - Step C: If you are not 100% certain of the root cause, add more debug entries and repeat.
 - Step D: Only when you are 100% confident of the cause, implement a direct fix (with or without keeping some logs briefly for confirmation).
 - Step E: The user may repeatedly re-run tests and paste logs; continue iterating until the issue is definitively fixed.
 
-3) Cleanup policy
+4) Cleanup policy
 - After the fix is confirmed, remove all temporary logging.
 - Grep to find every occurrence:
   - ripgrep: `rg -n "CURSOR_DEBUG_LOG" -S`
   - grep:    `grep -Rin "CURSOR_DEBUG_LOG" .`
 - Delete each call site (and any now-unused imports) before finalizing the fix.
 
-4) Alignment with workspace rules
+5) Alignment with workspace rules
 - No fast paths or heuristics: Logging should not add conditional shortcuts; it merely reports state unconditionally.
 - No exception-handling shields: Do not add defensive exception handling (try/catch, try/except) around the logs. Keep failures visible.
 - No test details in production prompts: Temporary logs must not leak test-specific information into production prompts or docstrings.
 - Rapid evolution: This logging is temporary by design; remove it once the issue is resolved—do not preserve backward compatibility.
 
-5) Intent and scope
+6) Intent and scope
 - This logging exists solely for interactive debugging in Cursor chats.
 - The function name `CURSOR_DEBUG_LOG` is intentionally unique and grep-friendly to ensure quick cleanup on request.
