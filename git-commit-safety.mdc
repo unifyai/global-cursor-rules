@@ -1,12 +1,20 @@
 ---
-description: Rules for performing git commits safely in multi-agent environments to avoid race conditions
+description: Git safety rules — pull before editing, explicit path commits, push only when asked
 globs: ["**/*"]
 alwaysApply: true
 ---
 
-# Git Commit Safety
+# Git Safety
 
-## Context
+## Rule: Pull Before Editing a Repository
+
+Before making any file edits in a repository, run `git pull --rebase` once to sync with the remote. This prevents the agent from working on a stale branch and silently overwriting others' commits.
+
+- **Once per repo per session** is sufficient — no need to pull on every turn.
+- **After a push rejection + rebase**: re-read any files you plan to edit next. The rebase changed them on disk but your in-memory copies are stale.
+- **Exception**: only skip if the user explicitly asks you not to pull.
+
+## Context: Explicit Path Commits
 When multiple agents run in parallel in `local` mode, there is a race condition risk if they use the shared git index (staging area).
 - Agent A: `git add fileA`
 - Agent B: `git add fileB`
