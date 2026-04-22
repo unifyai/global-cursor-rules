@@ -34,3 +34,7 @@ When Unity's `ConversationManager` needs to dispatch a voice agent, send an SMS,
 - **console**: Can trigger communications through Orchestra/Communication
 - **unify**: May be used for logging communication events
 - **unillm**: May be used for any LLM-powered communication features
+
+## Mirrored Artifacts
+
+- **OAuth Scopes** (`common/scopes.py`): Mirrored in Orchestra's `web/api/assistant/scopes.py`. Any change MUST be applied in both repos in the same changeset. See `scopes-mirror.mdc`.
