@@ -33,3 +33,7 @@ Orchestra is the source of truth for all persistent data. When Unity's managers 
 - **console**: Web UI that reads/writes Orchestra data
 - **communication**: Authenticates with Orchestra for admin operations
 - **unillm**: Independent (no direct Orchestra dependency)
+
+## Mirrored Artifacts
+
+- **OAuth Scopes** (`web/api/assistant/scopes.py`): Mirrored in Communication's `common/scopes.py`. Any change MUST be applied in both repos in the same changeset. See `scopes-mirror.mdc`.
