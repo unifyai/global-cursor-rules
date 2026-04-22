@@ -23,9 +23,6 @@ JSON endpoints protected by admin API key:
 - **Outlook** (`/outlook`): Email sending, subscription management
 - **Social** (`/social`): Verification code generation over SMS
 
-### SBC Proxy
-Kamailio-based SIP proxy for LiveKit integration, handling SIP trunking for voice calls.
-
 ## Position in the System
 
 When Unity's `ConversationManager` needs to dispatch a voice agent, send an SMS, or trigger an email, it calls Communication at `UNITY_COMMS_URL`. Communication handles the Twilio/Gmail/Outlook integrations and publishes events back for Unity to process. The adapters receive external webhooks and route them into the system.
