@@ -1,0 +1,39 @@
+# OAuth Scopes: Mirrored Between Communication and Orchestra
+
+## Context
+OAuth scope catalogs (Google and Microsoft provider scopes, feature bundles, and the `build_scope_string` resolver) are intentionally duplicated in two places:
+
+- **Communication**: `common/scopes.py`
+- **Orchestra**: `web/api/assistant/scopes.py`
+
+Both services need this data at runtime (Communication when initiating OAuth flows and talking to providers; Orchestra when storing assistant scope grants and serving them to Console). Because the contents are small, static, and change rarely, we deliberately avoid adding a cross-service HTTP round-trip and instead keep two copies in sync.
+
+## Critical Rules
+
+### 1. Any Scope Change Must Be Mirrored
+When modifying **any** of the following in either repo, the identical change MUST be made in the sibling file in the other repo in the same changeset:
+
+- `GOOGLE_SCOPE_BUNDLES` / `MICROSOFT_SCOPE_BUNDLES`
+- `GOOGLE_BASE_SCOPES` / `MICROSOFT_BASE_SCOPES`
+- The `build_scope_string` function signature or behavior
+- Any new provider added to `_BUNDLES` / `_BASE`
+
+This applies to additions, removals, renames, and reorderings.
+
+### 2. Do Not "Fix" the Duplication
+Do not attempt to eliminate the duplication by:
+- Having Communication fetch scopes from Orchestra over HTTP
+- Having Orchestra fetch scopes from Communication
+- Extracting the file into a shared package
+
+The duplication is a conscious trade-off. If you believe the trade-off should be revisited, raise it with the user first.
+
+### 3. Verification Workflow
+When asked to add or modify a scope in one repo:
+1. Make the change in the current repo.
+2. Locate the sibling file in the other repo (paths above).
+3. Apply the matching change there.
+4. If the other repo is not checked out locally, surface this clearly to the user and list the exact edits required so they can apply them.
+
+### 4. Keep the Cross-Reference Comment Accurate
+The docstring at the top of each `scopes.py` points at its sibling. If either file moves, update both docstrings.
